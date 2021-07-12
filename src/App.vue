@@ -1,17 +1,40 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <el-table
+      :data="statesInfo"
+      style="width: 100%">
+      <el-table-column v-for="i in Object.keys(statesInfo[0])" :key="i" 
+        :prop="i" :label="i" width="180">
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import axios from 'axios'
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data(){
+    return{
+      url:'http://localhost:3000/',
+      statesInfo: []      
+    }
+  },
+  methods:{
+    getData(){
+      axios.get(this.url).then(res => {
+        let dat = res.data
+        this.statesInfo = dat.map(val => {
+          let tmpJSON = {}
+          Object.keys(val._id).forEach(key => tmpJSON[key] = val._id[key])
+          tmpJSON.count = val.count
+          return tmpJSON
+        })
+      })
+    }
+  },
+  mounted(){
+    this.getData()
   }
 }
 </script>
