@@ -1,0 +1,22 @@
+use('wastewater');
+const aggr = [
+  { $match: {city: "H"}},
+  // { $project: {_id: "$abbr","abbr" : "$abbr", "locName" : "$locName"}}
+  { $project: {
+    _id:  "$abbr",
+    abbr : "$abbr", 
+    locName : "$locName",
+    coords: ['$n','$s']
+  }},
+  {$out: 'coords'}
+]
+
+coords = db.locs.aggregate(aggr)
+db.coords.find()
+
+use('wastewater');
+db.viralLoad.aggregate([
+    {$match: {} }
+])
+
+
